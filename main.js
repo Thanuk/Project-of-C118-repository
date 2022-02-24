@@ -33,12 +33,15 @@ timer_check = "";
 answer_holder = "";
 
 function preload(){
+    classifier = ml5.imageClassifier('DoodleNet');
 }
 
 function setup(){
-    canvas = createCanvas(400, 400);
+    canvas = createCanvas(350, 350);
     canvas.center();
     background("white");
+    canvas.mouseReleased(classifyCanvas);
+    synth = window.speechSynthesis;
 }
 
 function updateCanvas(){
@@ -53,16 +56,17 @@ function updateCanvas(){
 
 function draw(){
     check_sketch();
+
     if(drawn_sketch == Sketch){
         answer_holder = "SET";
         score = score + 1;
-        document.getElementById("Number_of_Scores").innerHTML = score;
+        document.getElementById("Number_of_Scores").innerHTML =+ score;
     }
 }
 
-function ckeck_sketch(){
+function check_sketch(){
     timer_count = timer_count + 1;
-    document.getElementById("Number_of_Minutes").innerHTML = timer_count;
+    document.getElementById("Number_of_Minutes").innerHTML =+ timer_count;
     console.log(timer_count);
 
     if(timer_count > 400) {
@@ -76,8 +80,27 @@ function ckeck_sketch(){
     }
 }
 
-random_number = Math.floor((Math.random()*quick_draw_data_set.length) + 1);
-console.log(random_number);
+function draw(){
+    if(mouseIsPressed){
+        line(pmouseX, pmouseY, mouseX, mouseY);
+    }
 
-Sketch = quick_draw_data_set[random_number];
-document.getElementById("The_Sketch_shown_for_drawing").concat(Sketch);
+    strokeWeight(15);
+    stroke("rgb(255, 10, 30)");
+}
+
+function classifyCanvas(){
+    classifier.classify(canvas, gotResult);
+}
+
+function gotResult(error, results){
+    if(error){
+        console.error(error);
+    }
+
+    console.log(results);
+    document.getElementById("Sketch_Name").innerHTML = results[0].label;
+    document.getElementById("Accuracy_Level").innerHTML = Math.round(results[0].confidence * 100)  + " %";
+    utterThis = new SpeechSynthesisUtterance(results[0].label);
+    synth.speak(utterThis);
+}

@@ -14,7 +14,7 @@ h1{
 canvas{
     border-radius: 20px;
     border: solid whitesmoke 10px;
-    margin-top: 25px;
+    margin-top: 50px;
     animation-name: example;
     animation-duration: 2s;
     animation-iteration-count: infinite;
