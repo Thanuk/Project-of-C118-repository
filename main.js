@@ -4,6 +4,7 @@ score = 0;
 timer_count = 0;
 timer_check = "";
 answer_holder = "";
+drawn_sketch = "";
 
 random_number = Math.floor((Math.random()*quick_draw_data_set.length) + 1);
 console.log(random_number);
@@ -34,7 +35,13 @@ function updateCanvas(){
 }
 
 function draw(){
-    drawn_sketch = results[0].label;
+    if(mouseIsPressed){
+        line(pmouseX, pmouseY, mouseX, mouseY);
+    }
+
+    strokeWeight(15);
+    stroke("rgb(255, 10, 30)");
+
     check_sketch();
 
     if(drawn_sketch == Sketch){
@@ -45,32 +52,23 @@ function draw(){
 }
 
 function check_sketch(){
-
     timer_count = timer_count + 1;
 
     document.getElementById("Number_of_Minutes").innerHTML = timer_count;
     console.log(timer_count);
 
-}
-
-if(timer_count > 400) {
-    timer_count = 0;
-    timer_check = "completed";
-}
-
-if(timer_check == "completed"||(answer_holder == "SET")){
-    timer_check="";
-    answer_holder="";
-    updateCanvas();
-} 
-
-function draw(){
-    if(mouseIsPressed){
-        line(pmouseX, pmouseY, mouseX, mouseY);
+    
+    if(timer_count > 400) {
+        timer_count = 0;
+        timer_check = "completed";
     }
 
-    strokeWeight(15);
-    stroke("rgb(255, 10, 30)");
+    if(timer_check == "completed"||(answer_holder == "SET")){
+        timer_check="";
+        answer_holder="";
+        updateCanvas();
+    } 
+
 }
 
 function classifyCanvas(){
